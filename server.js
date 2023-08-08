@@ -8,6 +8,8 @@ let port = process.env.port || 3000;
 let collection;
 
 app.use(express.static(__dirname + "/"));
+app.use(express.json());
+app.use(express.urlencoded({extended: false}));
 
 
 const client = new MongoClient(uri, {
