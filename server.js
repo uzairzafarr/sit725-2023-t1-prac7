@@ -1,29 +1,65 @@
-let express = require('express');
+let express = require("express");
 let app = express();
-let port = process.env.port  || 3000 ;
 
-app.use(express.static(__dirname + '/'));
+const { MongoClient, ServerApiVersion } = require('mongodb');
+const uri = "mongodb+srv://uzairrzafar1:Deakin3@cluster0.miausil.mongodb.net/?retryWrites=true&w=majority";
 
-app.get('/', (req, res)=> {
+let port = process.env.port || 3000;
+let collection;
 
-    res.render('index.html');
+app.use(express.static(__dirname + "/"));
 
+
+const client = new MongoClient(uri, {
+    serverApi: {
+      version: ServerApiVersion.v1,
+      strict: true,
+      deprecationErrors: true,
+    }
+  });
+
+async function runDB() {
+  try {
+    await client.connect();
+    collection = client.db().collection("Cat");
+    console.log(collection);
+  } catch (ex) {
+    console.error(ex);
+  }
+}
+
+app.get("/", (req, res) => {
+  res.render("index.html");
 });
 
-app.get('/addTwoNumbers', (req, res)=> {
 
-    let num1 = req.query.number1;
-    let num2 = req.query.number2;
-
-    let add = parseInt(num1) + parseInt(num2);
-      
-
-    let result = {statusCode: 500, message: 'Sucessfull' , data: add};
-
-    res.json(result);
+app.get('/api/cats', (req,res) => {
+    getAllCats((err,result)=>{
+        if (!err) {
+            res.json({statusCode:200, data:result, message:'Get cats successfully'});
+        }
+    });
+});
+app.post('/api/cat', (req,res)=>{
+    let cat = req.body;
+    postCat(cat, (err, result) => {
+        if (!err) {
+            res.json({statusCode:201, data:result, message:'Successfull'});
+        }
+    });
 });
 
-app.listen(port, () =>{
+function postCat(cat,callback) {
+    collection.insertOne(cat,callback);
+}
 
-    console.log('Welcome to server SIT725 on port: ' + port + ' :)');
+
+
+function getAllCats(callback){
+    collection.find({}).toArray(callback);
+}
+
+app.listen(port, () => {
+  console.log("Welcome to server SIT725 on port: " + port + " :)");
+  runDB();
 });
