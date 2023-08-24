@@ -7,15 +7,15 @@
   margin: 4px 0;
 }
 .main-body {
-    background-color: #F28487;
-    color: white;
-    height: calc(100vh - 64px);
-    }
-    .materialboxed-image {
-    margin: 5px auto;
-    height: 400px;
-    }
-    .click-me-button {
-    background-color: #EE6E73;
-    margin-top: 50px;
-    }
+  background-color: #f28487;
+  color: white;
+  height: calc(100vh - 64px);
+}
+.materialboxed-image {
+  margin: 5px auto;
+  height: 400px;
+}
+.click-me-button {
+  background-color: #ee6e73;
+  margin-top: 50px;
+}
